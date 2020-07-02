@@ -2,45 +2,31 @@
   <div id="app">
     <!-- <img alt="Vue logo" src="./assets/logo.png">
     <HelloWorld msg="Welcome to Your Vue.js App"/> -->
-
-  <t-card>
+  <notifications group="foo" />
+  <t-card class="bg-blue-200">
     <p>Search Img Api in unsplash.com</p>
+    <!-- {{this.$store.getters.getAll}} -->
   </t-card>
 
+    <br>  
+
     <!-- Three columns -->
-  <div class="flex mb-4">
-    <div class="w-1/3 h-12"></div>
-    <div class="w-1/3 h-12 text-center">
-      <!-- <button >Get</button> -->
-      <!-- <t-button variant="primary" @click="getApi()">GET</t-button> -->
-      <t-input
-        v-on:keyup="getApi()"
-        v-model="query"
-        base-class="border-2 block w-full shadow-inner bg-yellow-100 focus:outline-none focus:shadow-outline"
-      />  
-      <!-- <t-button size="lg">Large button</t-button> -->
+    <div class="flex mb-4">
+      <div class="w-1/3 h-12"></div>
+      <div class="w-1/3 h-12 text-center">
+        <!-- <button >Get</button> -->
+        <!-- <t-button variant="primary" @click="getApi()">GET</t-button> -->
+        <t-input
+          v-on:keyup="getApi()"
+          v-model="query"
+          base-class="border-2 block w-full shadow-inner bg-yellow-100 focus:outline-none focus:shadow-outline"
+        />  
+        <!-- <t-button size="lg">Large button</t-button> -->
+      </div>
+      <div class="w-1/3 h-12">
+
+      </div>
     </div>
-    <div class="w-1/3 h-12">
-
-    </div>
-  </div>
-
-    <!-- <t-table
-      :headers="['id', 'Description', 'likes', 'links']"
-      :data="data "
-    /> -->
-    <!-- {{data.results}}   -->
-  
-
-  <!-- <t-table
-  :headers="['id', 'description', 'likes', 'links', 'img']"
-  :data="data.results"
->
-  <template v-slot:id> 
-    
-    asd
-  </template>
-</t-table>   -->
 
     <t-table
     :headers="['Id', 'Width', 'Height', 'Download Links', 'Img', 'Action']"
@@ -81,7 +67,7 @@
          -->
          <!-- {{ props.row.links.self }} -->
          
-           <t-button variant="secondary" size="sm" @click="save(props.row.links.download)">Save</t-button>
+           <t-button variant="secondary" size="sm" @click="save(props.row)">Save</t-button>
 
 
       </td>
@@ -89,14 +75,14 @@
   </template>
   </t-table>
 
-
+  <t-card class="bg-blue-400">
+    <h3>Count Img Save: {{this.$store.getters.getAll.length}} <t-button @click="download" size="sm">Download</t-button> </h3>
+  </t-card>
 
   </div>
 </template>
 
 <script>
-// import HelloWorld from './components/HelloWorld.vue'
-// import axios = require('axios');
 import axios from 'axios'
 import store from './store'
 
@@ -109,12 +95,7 @@ export default {
     return {
       info: null,
       query: "",
-      data: {}
-      //    :data="[
-      //   ['Alfonso Bribiesca', 'alfonso@vexilo.com', '31', '$9,999.00'],
-      //   ['Saida Redondo', 'saida@gmail.com', 27, '$124.00'],
-      //   ['Regina Bribiesca', 'regina@gmail.com', 1, '$0.00']
-      // ]"
+      data: {},
     }
   },
   methods: {
@@ -134,24 +115,26 @@ export default {
         // console.log("data", data)
     },
     save(data){
-      console.log("Save", data)
-      store.commit('saveImg', data)
+      store.commit('saveImg', data.links.download)
+
+      this.$notify({
+        group: 'foo',
+        title: 'Save Succes', 
+        text: 'id:'+ data.id +' ',
+      });
+
+    },
+    download(){
+
+      // this.$store.getters.getAll
+      var FileSaver = require('file-saver');
+      var blob = new Blob([this.$store.getters.getAll], {type: "text/plain;charset=utf-8"});
+      FileSaver.saveAs(blob, "imgList.txt");
     }
   },
-  // async mounted () {
-  //   axios.get('https://api.unsplash.com/search/photos?page=1&per_page=10&query=autos%20deportivos&client_id=M4h2fLH0CUHf2ifsx3jUJEgPuUff1nO4sgnVlkPJf84')
-  //     .then(function (response) {
-  //       // handle success
-  //       console.log(response.data);
-  //     })
-  //     .catch(function (error) {
-  //       // handle error
-  //       console.log(error);
-  //     })
-  //     .finally(function () {
-  //       // always executed
-  //     });
-  // }
+  mounted(){
+
+  }
 }
 </script>
 

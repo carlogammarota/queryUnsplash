@@ -7,6 +7,11 @@ export default new Vuex.Store({
   state: {
     images_Saves: []
   },
+  getters: {
+    getAll: state => {
+      return state.images_Saves
+    }
+  },
   mutations: {
     saveImg (state, data) {
       // mutate state

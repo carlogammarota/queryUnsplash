@@ -11,6 +11,12 @@ import './assets/styles/index.css';
 
 import MyOwnTheme from './themes/default.js'
 
+import Notifications from 'vue-notification'
+
+
+
+Vue.use(Notifications)
+
 Vue.use(VueTailwind, {
   theme: MyOwnTheme
 })
